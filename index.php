@@ -2,10 +2,10 @@
     require "vendor/autoload.php";
     require_once "Protozoa/Protozoa.php";
 
-    use Doctrine\DBAL\DriverManager;
     use Protozoa\Protozoa;
-    use Doctrine\DBAL\Configuration;
     use Protozoa\Schema\Schema;
+    use Doctrine\DBAL\DriverManager;
+    use Doctrine\DBAL\Configuration;
 
     $config           = new Configuration();
     $connectionParams = array(
@@ -17,7 +17,6 @@
     );
 
     $p = new Protozoa();
-
     $s = new Schema($config, $connectionParams);
     $s->analyze();
 

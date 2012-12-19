@@ -58,8 +58,8 @@
          */
         private function parseTable(\Doctrine\DBAL\Schema\Table $table)
         {
-            $t = new Table();
-            $t->setName($table->getName());
+            $t       = new Table();
+            $t->name = $table->getName();
 
             $columnDetails = $table->getColumns();
             $columns       = array();
@@ -67,7 +67,7 @@
                 $columns[] = $this->parseColumn($table, $column);
             }
 
-            $t->setColumns($columns);
+            $t->columns = $columns;
 
             return $t;
         }
@@ -80,12 +80,23 @@
          */
         private function parseColumn(\Doctrine\DBAL\Schema\Table $table, \Doctrine\DBAL\Schema\Column $column)
         {
-            $c = new Column();
-            $c->setName($column->getName());
-            $c->setIsPrimaryKey($this->isPrimaryKey($table, $column->getName()));
-            $c->setIsForeignKey($this->isForeignKey($table, $column->getName()));
+            $c            = new Column();
+            $relatedTable = $this->getForeignKey($table, $column->getName());
 
-            print_r($c);
+            $c->name          = $column->getName();
+            $c->type          = $column->getType()->getName();
+            $c->length        = $column->getLength();
+            $c->precision     = $column->getPrecision();
+            $c->scale         = $column->getScale();
+            $c->unsigned      = $column->getUnsigned();
+            $c->fixed         = $column->getFixed();
+            $c->notnull       = $column->getNotnull();
+            $c->default       = $column->getDefault();
+            $c->autoincrement = $column->getAutoincrement();
+            $c->comment       = $column->getComment();
+            $c->isPrimary     = $this->isPrimaryKey($table, $column->getName());
+            $c->isForeign     = !empty($relatedTable);
+            $c->relatedTable  = $relatedTable;
 
             return $c;
         }
@@ -113,7 +124,7 @@
          *
          * @return bool
          */
-        private function isForeignKey(\Doctrine\DBAL\Schema\Table $table, $columnName)
+        private function getForeignKey(\Doctrine\DBAL\Schema\Table $table, $columnName)
         {
             $foreignKeys = $table->getForeignKeys();
 
@@ -121,10 +132,10 @@
                 return false;
             }
 
-            foreach($foreignKeys as $foreignKey)
-            {
-                if(in_array($columnName, $foreignKey->getLocalColumns()))
-                    return true;
+            foreach ($foreignKeys as $foreignKey) {
+                if (in_array($columnName, $foreignKey->getLocalColumns())) {
+                    return $foreignKey->getForeignTableName();
+                }
             }
 
             return false;
