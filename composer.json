@@ -1,0 +1,25 @@
+{
+    "name": "dannykopping/spore",
+    "type": "library",
+    "description": "Database-centric utilities",
+    "keywords": ["rest", "orm"],
+    "homepage": "https://github.com/dannykopping/protozoa",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Danny Kopping",
+            "email": "dannykopping@gmail.com",
+            "homepage": "http://dannykopping.com",
+            "role": "Developer"
+        }
+    ],
+    "require": {
+        "php": ">=5.3.0",
+        "doctrine/dbal": "2.3.1"
+    },
+    "autoload": {
+        "psr-0": {
+            "Protozoa": "."
+        }
+    }
+}
